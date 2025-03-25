@@ -23,19 +23,19 @@ export default function UploadPage() {
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0]
       if (file) {
-        if (file.size > 1024 * 1024) {
-          // 1MB limit
+        if (file.size > 10 * 1024 * 1024) {
+          // 10MB limit
           toast({
             title: "File too large",
-            description: "Please upload a file smaller than 1MB",
+            description: "Please upload a file smaller than 10MB",
             variant: "destructive",
           })
           return
         }
-        if (!file.name.endsWith(".js") && !file.name.endsWith(".ts")) {
+        if (!file.name.endsWith(".py")) {
           toast({
             title: "Invalid file type",
-            description: "Please upload a JavaScript or TypeScript file",
+            description: "Please upload a Python file",
             variant: "destructive",
           })
           return
@@ -54,8 +54,7 @@ export default function UploadPage() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "application/javascript": [".js"],
-      "application/typescript": [".ts"],
+      "text/x-python": [".py"],
     },
     maxFiles: 1,
   })
@@ -166,7 +165,7 @@ export default function UploadPage() {
                               <span className="font-medium">Click to upload</span> or drag and drop
                             </p>
                             <p className="text-xs text-foreground/40 mt-1">
-                              JavaScript or TypeScript files only (max. 1MB)
+                              Python files only (max. 10MB)
                             </p>
                           </>
                         )}
@@ -199,4 +198,3 @@ export default function UploadPage() {
     </div>
   )
 }
-

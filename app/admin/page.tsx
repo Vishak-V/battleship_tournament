@@ -21,6 +21,12 @@ interface Participant {
   status: "idle" | "running" | "completed"
 }
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+
+if (!backendUrl) {
+  console.error("Backend URL is not defined. Check your .env file.");
+}
+
 export default function BattleshipTournament() {
   const [requiredRuns, setRequiredRuns] = useState<number>(3)
   const [isActive, setIsActive] = useState(false)
@@ -75,7 +81,7 @@ export default function BattleshipTournament() {
     })
     
     try {
-        const response = await fetch('http://localhost:8000/tournament/', {
+        const response = await fetch(`${backendUrl}/tournament/`, {
             method: 'POST',
             body: formData,
             headers: {
