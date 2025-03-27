@@ -50,10 +50,9 @@ export default function DocsPage() {
             </div>
             <div className="md:col-span-3">
               <Tabs defaultValue="getting-started">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="getting-started">Getting Started</TabsTrigger>
-                  <TabsTrigger value="api-reference">API Reference</TabsTrigger>
-                  <TabsTrigger value="examples">Examples</TabsTrigger>
+                  <TabsTrigger value="getting-started">Rulebook</TabsTrigger>
                 </TabsList>
                 <TabsContent value="getting-started">
                   <Card>
@@ -65,58 +64,86 @@ export default function DocsPage() {
                       <div>
                         <h3 className="text-lg font-medium mb-2">Prerequisites</h3>
                         <ul className="list-disc pl-6 space-y-1">
-                          <li>Basic knowledge of JavaScript or TypeScript</li>
+                          <li>Basic knowledge of Python</li>
+                          <li>A python interpreter installed in your device</li>
                           <li>A GitHub account (optional, for version control)</li>
-                          <li>Node.js installed on your machine (for local testing)</li>
                         </ul>
                       </div>
                       <div>
                         <h3 className="text-lg font-medium mb-2">Step 1: Create a Bot File</h3>
+                        <ul className="list-disc pl-6 space-y-1">
+                          <li>The bot file should be able to do two different things:</li>
+                          <ul className="list-disc pl-6 space-y-1">
+                            <li>Initialize the board, which includes placing 5 different ships in 10x10 grid, and print the board</li>
+                            <li>Print a move, given the current board status and the list of previous moves</li>
+                          </ul>
+                          <li>The bot script should accept command line arguments, where the arguments differs depending on whether it’s asked to initialize the board or return the next move </li>
+                          <ul className="list-disc pl-6 space-y-1">
+                            <li>Initialize the board: It should be able to accept 1 command line argument. The command line argument is:</li>
+                              <ul className="list-disc pl-6 space-y-1">
+                                <li>String 'Initialize'</li>
+                              </ul>
+                            <li>Return a move: It should be able to accept 3 command line arguments. The command line arguments are:</li>
+                              <ul className="list-disc pl-6 space-y-1">
+                                <li>Ship grid as a string: This grid contains the status of the bot's ship</li>
+                                <li>Attack grid as a string: This grid contains the status of the all hits/misses of previous moves on a grid</li>
+                                <li>List of previous moves of the bot as a string</li>
+                              </ul>
+                          </ul>
+                        </ul>
+                        <br />
                         <p className="mb-2">
-                          Create a new JavaScript or TypeScript file for your bot. Here's a basic template:
+                          Here's a basic template:
                         </p>
                         <pre className="bg-muted p-4 rounded-md overflow-x-auto">
-                          <code>{`// MyFirstBot.js
-export default class MyFirstBot {
-  constructor() {
-    this.name = "MyFirstBot";
-    this.author = "Your Name";
-  }
+                          <code>{`import sys
+import random
 
-  // Called at the start of each game
-  initGame() {
-    // Initialize your game state
-  }
+def get_ships():
+    ships = [
+        ("Carrier", "A1", "A2", "A3", "A4", "A5"),
+        ("Battleship", "B2", "C2", "D2", "E2"),
+        ("Cruiser", "C3", "D3", "E3"),
+        ("Submarine", "D6", "E6", "F6"),
+        ("Destroyer", "E7", "E8")
+    ]
 
-  // Called to place your ships
-  placeShips() {
-    // Return an array of ship placements
-    return [
-      { type: "Carrier", position: { x: 0, y: 0 }, orientation: "horizontal" },
-      { type: "Battleship", position: { x: 0, y: 1 }, orientation: "horizontal" },
-      { type: "Cruiser", position: { x: 0, y: 2 }, orientation: "horizontal" },
-      { type: "Submarine", position: { x: 0, y: 3 }, orientation: "horizontal" },
-      { type: "Destroyer", position: { x: 0, y: 4 }, orientation: "horizontal" }
-    ];
-  }
+    # Create the rows for each ship
+    rows = [",".join(ship) for ship in ships]
+    
+    # Join rows with newlines
+    result = "\n".join(rows)
 
-  // Called each turn to make a move
-  makeMove(gameState) {
-    // Simple strategy: random shots
-    const x = Math.floor(Math.random() * 10);
-    const y = Math.floor(Math.random() * 10);
-    return { x, y };
-  }
-}`}</code>
+    return result
+
+# Check if the first command-line argument is "initialize"
+if len(sys.argv) > 1 and sys.argv[1].lower() == "initialize":
+    print(get_ships())
+else:
+    # Generate a random character from 'A' to 'J'
+    moves_str = sys.argv[3]
+    moves_list = moves_str.split(" ")
+
+    while True:
+        random_char = chr(random.randint(ord('A'), ord('J')))
+
+        # Generate a random digit from '1' to '10'
+        random_digit = random.randint(1, 10)
+
+        move = random_char + str(random_digit)
+
+        if move in moves_list:
+            continue
+        else:
+            print(move)
+            break
+`}</code>
                         </pre>
                       </div>
                       <div>
                         <h3 className="text-lg font-medium mb-2">Step 2: Test Your Bot Locally</h3>
-                        <p>You can test your bot locally using our test framework:</p>
-                        <div className="bg-muted p-4 rounded-md overflow-x-auto">
-                          <code>{`npm install -g battleship-ai-tester
-battleship-ai-tester --bot=path/to/MyFirstBot.js`}</code>
-                        </div>
+                        <p>Test your bot locally by providing valid command line arguments</p>
+
                       </div>
                       <div>
                         <h3 className="text-lg font-medium mb-2">Step 3: Upload Your Bot</h3>
