@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Upload, Trophy, Code, Info } from "lucide-react"
+import { ArrowRight, Upload, Trophy, Code, Info, Settings } from "lucide-react"
 
 export default function Home() {
   return (
@@ -24,6 +24,13 @@ export default function Home() {
             </Link>
             <Link href="/docs" className="text-sm font-medium text-foreground/60 hover:text-foreground">
               Documentation
+            </Link>
+            <Link
+              href="/admin"
+              className="text-sm font-medium text-foreground/60 hover:text-foreground flex items-center gap-1"
+            >
+              <Settings className="h-4 w-4" />
+              Admin
             </Link>
           </nav>
         </div>
@@ -61,13 +68,12 @@ export default function Home() {
                   {Array.from({ length: 100 }).map((_, i) => (
                     <div
                       key={i}
-                      className={`aspect-square rounded ${
-                        [12, 13, 14, 22, 32, 42, 52, 53, 54, 55, 66, 67, 68, 76, 86, 96].includes(i)
+                      className={`aspect-square rounded ${[12, 13, 14, 22, 32, 42, 52, 53, 54, 55, 66, 67, 68, 76, 86, 96].includes(i)
                           ? "bg-destructive/80"
                           : [25, 26, 27, 28, 35, 45, 65, 75, 85, 95].includes(i)
                             ? "bg-primary/80"
                             : "bg-muted"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
