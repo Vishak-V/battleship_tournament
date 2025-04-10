@@ -11,6 +11,9 @@ export function WelcomeNotification() {
   const [hasShownWelcome, setHasShownWelcome] = useState(false)
 
   useEffect(() => {
+    // Skip on server-side rendering
+    if (typeof window === "undefined") return
+
     // Check if the user just logged in by comparing the current time with the last login time
     const lastLoginTime = localStorage.getItem("last_login_time")
     const currentTime = Date.now()
