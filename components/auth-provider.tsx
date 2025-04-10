@@ -26,10 +26,10 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   isAuthenticated: false,
-  login: async () => { },
-  logout: async () => { },
-  startOAuthFlow: async () => { },
-  register: async () => { },
+  login: async () => {},
+  logout: async () => {},
+  startOAuthFlow: async () => {},
+  register: async () => {},
 })
 
 // Create the auth provider component
@@ -49,13 +49,24 @@ export function AuthProvider({
     const checkAuthStatus = async () => {
       try {
         // First check for stored auth token or session
-        const storedUser = localStorage.getItem("battleship_user")
+        let storedUser = null
+
+        // Safely check localStorage only in browser environment
+        if (typeof window !== "undefined") {
+          const storedUserData = localStorage.getItem("battleship_user")
+          if (storedUserData) {
+            try {
+              storedUser = JSON.parse(storedUserData)
+            } catch (e) {
+              console.error("Failed to parse stored user data:", e)
+            }
+          }
+        }
 
         if (storedUser) {
-          const userData = JSON.parse(storedUser)
-          setUser(userData)
+          setUser(storedUser)
           setIsAuthenticated(true)
-          console.log("User authenticated from localStorage:", userData)
+          console.log("User authenticated from localStorage:", storedUser)
           setIsLoading(false)
           return
         }
