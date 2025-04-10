@@ -1,40 +1,15 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Upload, Trophy, Code, Info, Settings } from "lucide-react"
+import { ArrowRight, Upload, Trophy, Code, Info } from "lucide-react"
+import { WelcomeNotification } from "@/components/welcome-notification"
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background hexagon-pattern">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
-          <div className="flex items-center gap-2 font-bold text-primary">
-            <Trophy className="h-5 w-5" />
-            <span>Battleship AI Arena</span>
-          </div>
-          <nav className="ml-auto flex gap-4">
-            <Link href="/upload" className="text-sm font-medium text-foreground/60 hover:text-foreground">
-              Upload Bot
-            </Link>
-            <Link href="/play" className="text-sm font-medium text-foreground/60 hover:text-foreground">
-              Play
-            </Link>
-            <Link href="/leaderboard" className="text-sm font-medium text-foreground/60 hover:text-foreground">
-              Leaderboard
-            </Link>
-            <Link href="/docs" className="text-sm font-medium text-foreground/60 hover:text-foreground">
-              Documentation
-            </Link>
-            <Link
-              href="/admin"
-              className="text-sm font-medium text-foreground/60 hover:text-foreground flex items-center gap-1"
-            >
-              <Settings className="h-4 w-4" />
-              Admin
-            </Link>
-          </nav>
-        </div>
-      </header>
+      {/* Add the welcome notification component */}
+      <WelcomeNotification />
+
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 border-b border-muted">
           <div className="container px-4 md:px-6">

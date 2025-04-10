@@ -1,36 +1,47 @@
+"use client"
+import { Button } from "@/components/ui/button"
+import { Play, RotateCcw, Pause, SkipForward } from "lucide-react"
+
 interface GameControlsProps {
-  gameState: {
-    status: string
-    turn: number
-    currentPlayer: string
-    winner: string | null
-  }
-  onStart: () => void
-  onReset: () => void
+  onStart?: () => void
+  onPause?: () => void
+  onReset?: () => void
+  onSkip?: () => void
+  isPlaying?: boolean
+  canStart?: boolean
+  canPause?: boolean
+  canReset?: boolean
+  canSkip?: boolean
 }
 
-export function GameControls({ gameState, onStart, onReset }: GameControlsProps) {
+export function GameControls({
+  onStart,
+  onPause,
+  onReset,
+  onSkip,
+  isPlaying = false,
+  canStart = true,
+  canPause = true,
+  canReset = true,
+  canSkip = true,
+}: GameControlsProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 rounded-lg bg-card/50 border border-primary/20">
-      <div className="flex items-center gap-4">
-        <div className="text-sm">
-          <span className="text-foreground/60">Status: </span>
-          <span className="font-medium">{gameState.status.charAt(0).toUpperCase() + gameState.status.slice(1)}</span>
-        </div>
-        <div className="text-sm">
-          <span className="text-foreground/60">Turn: </span>
-          <span className="font-medium">{gameState.turn}</span>
-        </div>
-        <div className="text-sm">
-          <span className="text-foreground/60">Current Player: </span>
-          <span className="font-medium">{gameState.currentPlayer === "player1" ? "You" : "Opponent"}</span>
-        </div>
-      </div>
-      {gameState.winner && (
-        <div className="text-sm font-medium text-primary">
-          Winner: {gameState.winner === "player1" ? "You" : "Opponent"}
-        </div>
+    <div className="flex items-center justify-center gap-2">
+      {isPlaying ? (
+        <Button variant="outline" size="icon" onClick={onPause} disabled={!canPause} title="Pause" aria-label="Pause">
+          <Pause className="h-4 w-4" />
+        </Button>
+      ) : (
+        <Button variant="outline" size="icon" onClick={onStart} disabled={!canStart} title="Start" aria-label="Start">
+          <Play className="h-4 w-4" />
+        </Button>
       )}
+      <Button variant="outline" size="icon" onClick={onReset} disabled={!canReset} title="Reset" aria-label="Reset">
+        <RotateCcw className="h-4 w-4" />
+      </Button>
+      <Button variant="outline" size="icon" onClick={onSkip} disabled={!canSkip} title="Skip" aria-label="Skip">
+        <SkipForward className="h-4 w-4" />
+      </Button>
     </div>
   )
 }

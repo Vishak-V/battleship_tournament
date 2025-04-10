@@ -1,37 +1,72 @@
 "use client"
-
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react"
+import { GameGrid } from "@/components/game-grid"
 
 interface GameBoardProps {
-  board: string[]
-  interactive?: boolean
-  onCellClick?: (index: number) => void
+  boardSize?: number
+  playerBoard?: boolean
+  ships?: any[]
+  hits?: number[][]
+  misses?: number[][]
+  onCellClick?: (row: number, col: number) => void
+  disabled?: boolean
 }
 
-export function GameBoard({ board, interactive = false, onCellClick }: GameBoardProps) {
-  return (
-    <div className="relative aspect-square w-full">
-      <div className="absolute inset-0">
-        <div className="grid h-full w-full grid-cols-10 grid-rows-10 gap-1 rounded-lg p-2 bg-background/50 border border-primary/20 radar-sweep">
-          {board.map((cell, index) => (
-            <button
-              key={index}
-              className={cn(
-                "relative aspect-square rounded transition-colors",
-                cell === "empty" && "bg-muted hover:bg-muted/80",
-                cell === "ship" && "bg-primary/80",
-                cell === "hit" && "bg-destructive/80",
-                cell === "miss" && "bg-accent",
-                interactive && "cursor-pointer hover:opacity-80",
-                !interactive && "cursor-default",
-              )}
-              disabled={!interactive}
-              onClick={() => onCellClick?.(index)}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
+export function GameBoard({
+  boardSize = 10,
+  playerBoard = false,
+  ships = [],
+  hits = [],
+  misses = [],
+  onCellClick,
+  disabled = false,
+}: GameBoardProps) {
+  const [board, setBoard] = useState<string[][]>([])
+
+  useEffect(() => {
+    // Initialize empty board
+    const newBoard = Array(boardSize)
+      .fill(null)
+      .map(() => Array(boardSize).fill("empty"))
+
+    // Place ships on board
+    if (playerBoard) {
+      ships.forEach((ship) => {
+        if (ship.positions) {
+          ship.positions.forEach((pos: [number, number]) => {
+            const [row, col] = pos
+            if (row >= 0 && row < boardSize && col >= 0 && col < boardSize) {
+              newBoard[row][col] = "ship"
+            }
+          })
+        }
+      })
+    }
+
+    // Mark hits
+    hits.forEach((pos) => {
+      const [row, col] = pos
+      if (row >= 0 && row < boardSize && col >= 0 && col < boardSize) {
+        newBoard[row][col] = playerBoard ? "hit" : "enemy-hit"
+      }
+    })
+
+    // Mark misses
+    misses.forEach((pos) => {
+      const [row, col] = pos
+      if (row >= 0 && row < boardSize && col >= 0 && col < boardSize) {
+        newBoard[row][col] = "miss"
+      }
+    })
+
+    setBoard(newBoard)
+  }, [boardSize, playerBoard, ships, hits, misses])
+
+  const handleCellClick = (row: number, col: number) => {
+    if (disabled || playerBoard) return
+    if (onCellClick) onCellClick(row, col)
+  }
+
+  return <GameGrid board={board} onCellClick={handleCellClick} />
 }
 

@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, ArrowRight, Calendar, Trophy, Users } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { ProtectedRoute } from "@/components/protected-route"
 
 interface Tournament {
   id: number
@@ -78,82 +79,84 @@ export default function TournamentsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-        <div className="container flex h-16 items-center">
-          <Link href="/" className="flex items-center gap-2 font-bold">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
-      <main className="flex-1 py-12">
-        <div className="container">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold">Tournaments</h1>
-            <p className="text-muted-foreground">Join competitive tournaments and test your bot against others</p>
+    <ProtectedRoute>
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
+          <div className="container flex h-16 items-center">
+            <Link href="/" className="flex items-center gap-2 font-bold">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Link>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {tournaments.map((tournament) => (
-              <Card key={tournament.id}>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle>{tournament.name}</CardTitle>
-                    <Badge
-                      variant={
-                        tournament.status === "active"
-                          ? "default"
-                          : tournament.status === "upcoming"
-                            ? "secondary"
-                            : "outline"
-                      }
-                    >
-                      {tournament.status.charAt(0).toUpperCase() + tournament.status.slice(1)}
-                    </Badge>
-                  </div>
-                  <CardDescription>{tournament.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm">
-                      <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>
-                        {new Date(tournament.startDate).toLocaleDateString()} -{" "}
-                        {new Date(tournament.endDate).toLocaleDateString()}
-                      </span>
+        </header>
+        <main className="flex-1 py-12">
+          <div className="container">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold">Tournaments</h1>
+              <p className="text-muted-foreground">Join competitive tournaments and test your bot against others</p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {tournaments.map((tournament) => (
+                <Card key={tournament.id}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <CardTitle>{tournament.name}</CardTitle>
+                      <Badge
+                        variant={
+                          tournament.status === "active"
+                            ? "default"
+                            : tournament.status === "upcoming"
+                              ? "secondary"
+                              : "outline"
+                        }
+                      >
+                        {tournament.status.charAt(0).toUpperCase() + tournament.status.slice(1)}
+                      </Badge>
                     </div>
-                    <div className="flex items-center text-sm">
-                      <Users className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>{tournament.participants} participants</span>
-                    </div>
-                    {tournament.status === "completed" && tournament.winner && (
+                    <CardDescription>{tournament.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
                       <div className="flex items-center text-sm">
-                        <Trophy className="mr-2 h-4 w-4 text-muted-foreground" />
-                        <span>Winner: {tournament.winner}</span>
+                        <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <span>
+                          {new Date(tournament.startDate).toLocaleDateString()} -{" "}
+                          {new Date(tournament.endDate).toLocaleDateString()}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    variant={tournament.status === "completed" ? "outline" : "default"}
-                    className="w-full"
-                    onClick={() => handleJoinTournament(tournament.id)}
-                  >
-                    {tournament.status === "active"
-                      ? "Join Tournament"
-                      : tournament.status === "upcoming"
-                        ? "Register Interest"
-                        : "View Results"}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+                      <div className="flex items-center text-sm">
+                        <Users className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <span>{tournament.participants} participants</span>
+                      </div>
+                      {tournament.status === "completed" && tournament.winner && (
+                        <div className="flex items-center text-sm">
+                          <Trophy className="mr-2 h-4 w-4 text-muted-foreground" />
+                          <span>Winner: {tournament.winner}</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button
+                      variant={tournament.status === "completed" ? "outline" : "default"}
+                      className="w-full"
+                      onClick={() => handleJoinTournament(tournament.id)}
+                    >
+                      {tournament.status === "active"
+                        ? "Join Tournament"
+                        : tournament.status === "upcoming"
+                          ? "Register Interest"
+                          : "View Results"}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </ProtectedRoute>
   )
 }
 

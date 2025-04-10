@@ -4,6 +4,7 @@ import type React from "react"
 import { useState, useRef } from "react"
 import Link from "next/link"
 import { CheckCircle, AlertCircle, User, ArrowLeft } from "lucide-react"
+import { ProtectedRoute } from "@/components/protected-route"
 
 const GRID_SIZE = 7
 const UPLOAD_STEPS = GRID_SIZE * GRID_SIZE
@@ -220,35 +221,37 @@ export default function Play1v1Page() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-muted bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
-          <Link href="/play" className="flex items-center gap-2 font-bold text-primary">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Play
-          </Link>
-        </div>
-      </header>
-
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-4xl">
-          <h1 className="text-4xl font-bold text-center mb-8 text-primary">Battleship Model Upload</h1>
-          <div className="grid md:grid-cols-2 gap-8">
-            {renderPlayerUpload("player1")}
-            {renderPlayerUpload("player2")}
+    <ProtectedRoute>
+      <div className="min-h-screen flex flex-col bg-background">
+        <header className="sticky top-0 z-50 w-full border-b border-muted bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container flex h-16 items-center">
+            <Link href="/play" className="flex items-center gap-2 font-bold text-primary">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Play
+            </Link>
           </div>
-          {player1.uploadStatus === "success" && player2.uploadStatus === "success" && (
-            <button
-              onClick={submitToBackend}
-              disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-lg transition-colors duration-300 mt-8 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 disabled:bg-muted disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? "Submitting..." : "Start Battle"}
-            </button>
-          )}
-        </div>
-      </main>
-    </div>
+        </header>
+
+        <main className="flex-1 flex items-center justify-center p-4">
+          <div className="w-full max-w-4xl">
+            <h1 className="text-4xl font-bold text-center mb-8 text-primary">Battleship Model Upload</h1>
+            <div className="grid md:grid-cols-2 gap-8">
+              {renderPlayerUpload("player1")}
+              {renderPlayerUpload("player2")}
+            </div>
+            {player1.uploadStatus === "success" && player2.uploadStatus === "success" && (
+              <button
+                onClick={submitToBackend}
+                disabled={isSubmitting}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-lg transition-colors duration-300 mt-8 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 disabled:bg-muted disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Submitting..." : "Start Battle"}
+              </button>
+            )}
+          </div>
+        </main>
+      </div>
+    </ProtectedRoute>
   )
 }
 

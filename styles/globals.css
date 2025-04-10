@@ -3,11 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root,
-  html[style*="color-scheme: dark"],
-  .dark {
-    color-scheme: dark;
-
+  :root {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -41,13 +37,8 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   html {
     background-color: hsl(222.2 84% 4.9%);
-    color-scheme: dark;
   }
 
   body {
@@ -55,12 +46,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-}
-
-/* Add vendor prefixes for better browser compatibility */
-.backdrop-blur {
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 
 .grid-pattern {
@@ -100,6 +85,7 @@
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   to {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
@@ -110,6 +96,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

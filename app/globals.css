@@ -34,6 +34,36 @@
 
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
 }
 
 @layer base {
@@ -45,6 +75,18 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: none;
+  }
+
+  /* Hide default cursor */
+  a,
+  button,
+  [role="button"],
+  .cursor-pointer,
+  input,
+  select,
+  textarea {
+    cursor: none !important;
   }
 }
 
@@ -100,4 +142,114 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Add bounce animation keyframes */
+@keyframes bounceInDown {
+
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -30px, 0) scaleY(0.8);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate3d(0, 5px, 0) scaleY(1.05);
+  }
+
+  75% {
+    transform: translate3d(0, -3px, 0) scaleY(0.95);
+  }
+
+  90% {
+    transform: translate3d(0, 1px, 0) scaleY(1.02);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes bounceOutUp {
+  20% {
+    transform: translate3d(0, -5px, 0) scaleY(0.95);
+  }
+
+  40%,
+  45% {
+    opacity: 1;
+    transform: translate3d(0, 10px, 0) scaleY(1.05);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -30px, 0) scaleY(0.8);
+  }
+}
+
+/* Add the crimson glow container class */
+.crimson-glow-container {
+  position: relative;
+}
+
+.crimson-glow-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(158, 27, 50, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Custom toast styles - Update these to fix positioning */
+.welcome-toast-viewport {
+  position: fixed !important;
+  top: 4rem !important;
+  /* Position below the top bar which is typically 4rem (64px) */
+  left: 0 !important;
+  right: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  list-style: none !important;
+  z-index: 40 !important;
+  outline: none !important;
+}
+
+/* Update the welcome-toast-styles class to have green colors and animations */
+.welcome-toast-styles {
+  width: 100% !important;
+  max-width: 100% !important;
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  padding: 1rem 2rem !important;
+  background-color: hsl(143 55% 15%) !important;
+  /* Green background */
+  border-bottom: 1px solid hsl(143 70% 40%) !important;
+  /* Green border */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+  margin: 0 !important;
+}
+
+/* Add animation classes */
+.welcome-toast-styles[data-state="open"] {
+  animation: bounceInDown 1.5s ease forwards !important;
+}
+
+.welcome-toast-styles[data-state="closed"] {
+  animation: bounceOutUp 0.8s ease forwards !important;
 }

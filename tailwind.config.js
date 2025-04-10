@@ -18,6 +18,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        crimson: "#9E1B32",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -51,9 +52,6 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      backgroundImage: {
-        "dark-gradient": "linear-gradient(to bottom, hsl(222.2 84% 4.9%), hsl(222.2 84% 4.9%))",
       },
       borderRadius: {
         lg: "var(--radius)",
