@@ -1,152 +1,193 @@
 "use client"
-
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Play, Pause, Settings, Trophy } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
+import { Play, Square, RotateCcw, Trophy, Users, Calendar, Clock } from "lucide-react"
 
-interface Bot {
+interface Participant {
   id: number
   name: string
-  author: string
+  author?: string
+  score: number
   wins: number
   losses: number
-  status: "ready" | "playing" | "error"
+  draws: number
+  matches: number
+  status: "idle" | "playing" | "completed"
 }
 
-interface TournamentMatch {
+interface Match {
   id: number
-  bot1: string
-  bot2: string
-  status: "scheduled" | "in_progress" | "completed"
-  winner?: string
+  player1Id: number
+  player2Id: number
+  winner?: number
+  status: "pending" | "active" | "completed"
+  turns?: number
 }
 
-export function TournamentManager() {
-  const [isRunning, setIsRunning] = useState(false)
-  const { toast } = useToast()
+interface TournamentManagerProps {
+  tournamentId?: string
+  tournamentName?: string
+  participants: Participant[]
+  matches?: Match[]
+  onStart?: () => void
+  onStop?: () => void
+  onReset?: () => void
+  isActive?: boolean
+  progress?: number
+  startDate?: Date
+  endDate?: Date
+  className?: string
+}
 
-  const bots: Bot[] = [
-    { id: 1, name: "AlphaBot", author: "John Doe", wins: 15, losses: 5, status: "ready" },
-    { id: 2, name: "BetaBot", author: "Jane Smith", wins: 12, losses: 8, status: "playing" },
-    { id: 3, name: "GammaBot", author: "Bob Wilson", wins: 10, losses: 10, status: "ready" },
-    { id: 4, name: "DeltaBot", author: "Alice Brown", wins: 8, losses: 12, status: "error" },
-  ]
+export function TournamentManager({
+  tournamentId = "T-1",
+  tournamentName = "Battleship Tournament",
+  participants = [],
+  matches = [],
+  onStart,
+  onStop,
+  onReset,
+  isActive = false,
+  progress = 0,
+  startDate,
+  endDate,
+  className = "",
+}: TournamentManagerProps) {
+  const [sortedParticipants, setSortedParticipants] = useState<Participant[]>([])
 
-  const matches: TournamentMatch[] = [
-    { id: 1, bot1: "AlphaBot", bot2: "BetaBot", status: "in_progress" },
-    { id: 2, bot1: "GammaBot", bot2: "DeltaBot", status: "scheduled" },
-    { id: 3, bot1: "AlphaBot", bot2: "DeltaBot", status: "completed", winner: "AlphaBot" },
-  ]
-
-  const toggleTournament = () => {
-    setIsRunning(!isRunning)
-    toast({
-      title: isRunning ? "Tournament Paused" : "Tournament Started",
-      description: isRunning ? "The tournament has been paused." : "The tournament is now running.",
+  useEffect(() => {
+    // Sort participants by score, then by wins
+    const sorted = [...participants].sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score
+      }
+      return b.wins - a.wins
     })
+    setSortedParticipants(sorted)
+  }, [participants])
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "idle":
+        return <Badge variant="outline">Idle</Badge>
+      case "playing":
+        return <Badge variant="secondary">Playing</Badge>
+      case "completed":
+        return <Badge variant="default">Completed</Badge>
+      case "pending":
+        return <Badge variant="outline">Pending</Badge>
+      case "active":
+        return <Badge variant="secondary">Active</Badge>
+      default:
+        return <Badge variant="outline">{status}</Badge>
+    }
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold">Tournament Control Panel</h2>
-          <p className="text-muted-foreground">Manage active tournaments and monitor bot performance</p>
-        </div>
-        <div className="flex gap-4">
-          <Button variant="outline" size="icon">
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Button onClick={toggleTournament}>
-            {isRunning ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
-            {isRunning ? "Pause Tournament" : "Start Tournament"}
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Active Bots</CardTitle>
-            <CardDescription>Currently registered bots and their status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Bot Name</TableHead>
-                  <TableHead>Author</TableHead>
-                  <TableHead>W/L</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {bots.map((bot) => (
-                  <TableRow key={bot.id}>
-                    <TableCell className="font-medium">{bot.name}</TableCell>
-                    <TableCell>{bot.author}</TableCell>
-                    <TableCell>
-                      {bot.wins}/{bot.losses}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          bot.status === "ready" ? "default" : bot.status === "playing" ? "secondary" : "destructive"
-                        }
-                      >
-                        {bot.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Current Matches</CardTitle>
-            <CardDescription>Ongoing and upcoming matches</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {matches.map((match) => (
-                <div key={match.id} className="flex items-center justify-between p-4 rounded-lg border">
-                  <div className="flex items-center gap-4">
-                    <div className="text-sm">
-                      {match.bot1} vs {match.bot2}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {match.status === "completed" && match.winner && (
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Trophy className="h-4 w-4 mr-1" />
-                        {match.winner}
-                      </div>
-                    )}
-                    <Badge
-                      variant={
-                        match.status === "in_progress"
-                          ? "default"
-                          : match.status === "scheduled"
-                            ? "secondary"
-                            : "outline"
-                      }
-                    >
-                      {match.status.replace("_", " ")}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
+    <div className={`space-y-6 ${className}`}>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>{tournamentName}</CardTitle>
+              <CardDescription>ID: {tournamentId}</CardDescription>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="flex items-center gap-2">
+              <Button onClick={onStart} disabled={isActive} variant="default" className="flex items-center gap-1">
+                <Play className="h-4 w-4" />
+                Start
+              </Button>
+              <Button onClick={onStop} disabled={!isActive} variant="destructive" className="flex items-center gap-1">
+                <Square className="h-4 w-4" />
+                Stop
+              </Button>
+              <Button onClick={onReset} variant="outline" className="flex items-center gap-1">
+                <RotateCcw className="h-4 w-4" />
+                Reset
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>
+                  {startDate?.toLocaleDateString()} - {endDate?.toLocaleDateString() || "Ongoing"}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span>{participants.length} Participants</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <span>
+                  {matches?.filter((m) => m.status === "completed").length || 0}/{matches?.length || 0} Matches
+                  Completed
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Tournament Progress</span>
+                <span>{Math.round(progress)}%</span>
+              </div>
+              <Progress value={progress} className="h-2" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="h-5 w-5 text-primary" />
+            Leaderboard
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">Rank</TableHead>
+                <TableHead>Bot</TableHead>
+                <TableHead className="text-right">Score</TableHead>
+                <TableHead className="text-right">W</TableHead>
+                <TableHead className="text-right">L</TableHead>
+                <TableHead className="text-right">D</TableHead>
+                <TableHead className="text-right">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedParticipants.map((participant, index) => (
+                <TableRow key={participant.id}>
+                  <TableCell className="font-medium">{index + 1}</TableCell>
+                  <TableCell>
+                    <div>
+                      <div>{participant.name}</div>
+                      {participant.author && (
+                        <div className="text-xs text-muted-foreground">by {participant.author}</div>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">{participant.score}</TableCell>
+                  <TableCell className="text-right">{participant.wins}</TableCell>
+                  <TableCell className="text-right">{participant.losses}</TableCell>
+                  <TableCell className="text-right">{participant.draws}</TableCell>
+                  <TableCell className="text-right">{getStatusBadge(participant.status)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   )
 }

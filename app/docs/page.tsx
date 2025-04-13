@@ -74,27 +74,40 @@ export default function DocsPage() {
                         <ul className="list-disc pl-6 space-y-1">
                           <li>The bot file should be able to do two different things:</li>
                           <ul className="list-disc pl-6 space-y-1">
-                            <li>Initialize the board, which includes placing 5 different ships in 10x10 grid, and print the board</li>
+                            <li>
+                              Initialize the board, which includes placing 5 different ships in 10x10 grid, and print
+                              the board
+                            </li>
                             <li>Print a move, given the current board status and the list of previous moves</li>
                           </ul>
-                          <li>The bot script should accept command line arguments, where the arguments differs depending on whether it’s asked to initialize the board or return the next move </li>
+                          <li>
+                            The bot script should accept command line arguments, where the arguments differs depending
+                            on whether it’s asked to initialize the board or return the next move{" "}
+                          </li>
                           <ul className="list-disc pl-6 space-y-1">
-                            <li>Initialize the board: It should be able to accept 1 command line argument. The command line argument is:</li>
-                              <ul className="list-disc pl-6 space-y-1">
-                                <li>String 'Initialize'</li>
-                              </ul>
-                            <li>Return a move: It should be able to accept 3 command line arguments. The command line arguments are:</li>
-                              <ul className="list-disc pl-6 space-y-1">
-                                <li>Ship grid as a string: This grid contains the status of the bot's ship</li>
-                                <li>Attack grid as a string: This grid contains the status of the all hits/misses of previous moves on a grid</li>
-                                <li>List of previous moves of the bot as a string</li>
-                              </ul>
+                            <li>
+                              Initialize the board: It should be able to accept 1 command line argument. The command
+                              line argument is:
+                            </li>
+                            <ul className="list-disc pl-6 space-y-1">
+                              <li>String 'Initialize'</li>
+                            </ul>
+                            <li>
+                              Return a move: It should be able to accept 3 command line arguments. The command line
+                              arguments are:
+                            </li>
+                            <ul className="list-disc pl-6 space-y-1">
+                              <li>Ship grid as a string: This grid contains the status of the bot's ship</li>
+                              <li>
+                                Attack grid as a string: This grid contains the status of the all hits/misses of
+                                previous moves on a grid
+                              </li>
+                              <li>List of previous moves of the bot as a string</li>
+                            </ul>
                           </ul>
                         </ul>
                         <br />
-                        <p className="mb-2">
-                          Here's a basic template:
-                        </p>
+                        <p className="mb-2">Here's a basic template:</p>
                         <pre className="bg-muted p-4 rounded-md overflow-x-auto">
                           <code>{`import sys
 import random
@@ -143,7 +156,6 @@ else:
                       <div>
                         <h3 className="text-lg font-medium mb-2">Step 2: Test Your Bot Locally</h3>
                         <p>Test your bot locally by providing valid command line arguments</p>
-
                       </div>
                       <div>
                         <h3 className="text-lg font-medium mb-2">Step 3: Upload Your Bot</h3>
