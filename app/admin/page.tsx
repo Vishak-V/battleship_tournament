@@ -97,20 +97,23 @@ export default function BattleshipTournament() {
 
       // Display the winner (first participant in rankings)
       console.log(data)
-      const winner = data.rankings[0][1]
-      alert(`Winner: ${winner}`)
+      
 
       console.log("Files uploaded successfully:", data)
-
+  
       // Update participants based on rankings or other response data
       setParticipants((prevParticipants) =>
         prevParticipants.map((participant) => ({
+          
           ...participant,
           status: "completed",
+
           // Optionally update other properties based on rankings or response
           // For example:
-          // score: data.scores[participant.name],
-          // losses: data.losses[participant.name]
+          score: 2 * data.rankings[participant.id-1][2] - participant.runs , //wins - losses
+          losses: participant.runs - data.rankings[participant.id-1][2], // losses
+
+
         })),
       )
     } catch (error) {
