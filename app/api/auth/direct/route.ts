@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"
 
     // Construct the auth URL based on the provider
-    const authUrl = `${backendUrl}/auth/login/`
+    const authUrl = `${backendUrl}auth/login/`
 
     // Get the frontend callback URL
     const origin = new URL(request.url).origin
