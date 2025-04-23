@@ -81,7 +81,7 @@ export default function BattleshipTournament() {
     participants.forEach((participant, index) => {
       formData.append(`file${index + 1}`, participant.file)
     })
-
+    const opponents = participants.length-1;
     try {
       const response = await fetch(`${backendUrl}/tournament/`, {
         method: "POST",
@@ -100,7 +100,17 @@ export default function BattleshipTournament() {
       
 
       console.log("Files uploaded successfully:", data)
-  
+
+      // interface Participant {
+      //   id: number
+      //   name: string
+      //   file: File
+      //   score: number
+      //   losses: number
+      //   runs: number
+      //   status: "idle" | "running" | "completed"
+      // }
+
       // Update participants based on rankings or other response data
       setParticipants((prevParticipants) =>
         prevParticipants.map((participant) => ({
@@ -110,9 +120,10 @@ export default function BattleshipTournament() {
 
           // Optionally update other properties based on rankings or response
           // For example:
-          score: 2 * data.rankings[participant.id-1][2] - participant.runs , //wins - losses
-          losses: participant.runs - data.rankings[participant.id-1][2], // losses
-
+          runs: requiredRuns,
+          score: data.rankings[data.rankings.findIndex(ranking => ranking[1] === participant.name)][2], //wins
+          losses: Math.abs(requiredRuns*opponents - data.rankings[data.rankings.findIndex(ranking => ranking[1] === participant.name)][2]), // losses
+          
 
         })),
       )
