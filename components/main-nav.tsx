@@ -15,9 +15,10 @@ export function MainNav() {
   }
 
   const navItems = [
-    { href: "/upload", label: "Upload Bot" },
+    { href: "/bots", label: "Upload Bot" },
     { href: "/play", label: "Play" },
     { href: "/leaderboard", label: "Leaderboard" },
+    { href: "/matches", label: "Matches" },
     { href: "/docs", label: "Documentation" },
     { href: "/admin", label: "Admin" },
   ]
